@@ -42,13 +42,12 @@ jobs:
       - name: Restore sdk solution
         run: dotnet restore ./src/csharp/TickTrader.Algo.Sdk.sln
 
-      - name: Setup npm cache
-        uses: actions/cache@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
-          path: ~\AppData\Roaming\npm-cache
-          key: ${{ runner.os }}-node-${{ hashFiles('**\package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '12.16.0'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Run npm install
         run: |
