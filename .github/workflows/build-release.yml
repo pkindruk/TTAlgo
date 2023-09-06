@@ -51,7 +51,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Run npm install
-        run: npm install --legacy-peer-deps
+        run: |
+          cd TickTrader.BotAgent
+          npm install --legacy-peer-deps
 
       - name: Run PowerShell script
         run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
