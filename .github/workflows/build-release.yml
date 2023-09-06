@@ -21,16 +21,46 @@ jobs:
     env:
       BuildScriptPath: ./build.ps1
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Run PowerShell script
-      run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+      - name: Setup nuget cache
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          # Since we don't use RestorePackagesWithLockFile (**/packages.lock.json), use project files insteads
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.ARTIFACT_NAME }}
-        path: ${{ env.BUILD_OUTPUT_FOLDER }}
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Restore main solution
+        run: dotnet restore ./Algo.sln
+
+      - name: Restore sdk solution
+        run: dotnet restore ./src/csharp/TickTrader.Algo.Sdk.sln
+
+      - name: Setup npm cache
+        uses: actions/cache@v3
+        with:
+          path: ~\AppData\Roaming\npm-cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**\package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Run npm install
+        run: npm install --legacy-peer-deps
+
+      - name: Run PowerShell script
+        run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.BUILD_OUTPUT_FOLDER }}
 
   create-tag:
     if: ${{ inputs.releaseVersion != '' }}
