@@ -33,26 +33,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Restore dotnet tools
-        run: dotnet tool restore
-
-      - name: Restore main solution
-        run: dotnet restore ./Algo.sln
-
-      - name: Restore sdk solution
-        run: dotnet restore ./src/csharp/TickTrader.Algo.Sdk.sln
-
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: '12.16.0'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-
-      - name: Run npm install
-        run: |
-          cd TickTrader.BotAgent
-          npm install --legacy-peer-deps
 
       - name: Run PowerShell script
         run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
