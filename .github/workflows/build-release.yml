@@ -73,7 +73,7 @@ jobs:
           tag: ${{ steps.save-tag.outputs.tag }}
           message: "Release ${{ steps.save-tag.outputs.tag }}"
           force_push_tag: true
-          github_token: ${{ secrets.ReleaseToken }}
+          github_token: ${{ secrets.RELEASETOKEN }}
 
   create-release:
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
         with:
           name: ${{ needs.create-tag.outputs.BUILD_TAG }}
           tag: ${{ needs.create-tag.outputs.BUILD_TAG }}
-          token: ${{ secrets.ReleaseToken }}
+          token: ${{ secrets.RELEASETOKEN }}
           artifacts: ${{ env.BUILD_OUTPUT_FOLDER }}/*.zip, ${{ env.BUILD_OUTPUT_FOLDER }}/*.exe, ${{ env.BUILD_OUTPUT_FOLDER }}/*.vsix
           bodyFile: ${{ env.ReleaseNote }}
           prerelease: ${{ inputs.isPreRelease }}
