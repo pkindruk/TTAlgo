@@ -41,7 +41,7 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Run PowerShell script
-        run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+        run: ${{ env.BuildScriptPath }} --Version=${{ inputs.releaseVersion }} --BuildNumber=${{ github.run_number }} --SkipTests=False --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -73,7 +73,6 @@ jobs:
           tag: ${{ steps.save-tag.outputs.tag }}
           message: "Release ${{ steps.save-tag.outputs.tag }}"
           force_push_tag: true
-          github_token: ${{ secrets.RELEASETOKEN }}
 
   create-release:
     runs-on: ubuntu-latest
@@ -94,7 +93,7 @@ jobs:
         with:
           name: ${{ needs.create-tag.outputs.BUILD_TAG }}
           tag: ${{ needs.create-tag.outputs.BUILD_TAG }}
-          token: ${{ secrets.RELEASETOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: ${{ env.BUILD_OUTPUT_FOLDER }}/*.zip, ${{ env.BUILD_OUTPUT_FOLDER }}/*.exe, ${{ env.BUILD_OUTPUT_FOLDER }}/*.vsix
           bodyFile: ${{ env.ReleaseNote }}
           prerelease: ${{ inputs.isPreRelease }}
