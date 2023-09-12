@@ -17,9 +17,9 @@ import "Updates/base.update.proto";
 import "Info/file.transfer.info.proto";
 
 //for logging via reflection
-import "Info/Parameterconfigs/input.parameter.config.proto";
-import "Info/Parameterconfigs/output.parameter.config.proto";
-import "Info/Parameterconfigs/parameter.config.proto";
+import "Info/ParameterConfigs/input.parameter.config.proto";
+import "Info/ParameterConfigs/output.parameter.config.proto";
+import "Info/ParameterConfigs/parameter.config.proto";
 
 
 service AlgoServerPublic
