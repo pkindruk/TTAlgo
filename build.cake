@@ -130,6 +130,7 @@ Task("BuildMainProject")
 
 Task("BuildSdk")
    .IsDependentOn("Clean")
+   .WithCriteria(!isGithubBuild)
    .Does(() =>
 {
    var block = BuildSystem.IsRunningOnTeamCity ? TeamCity.Block("BuildSdk") : null;
