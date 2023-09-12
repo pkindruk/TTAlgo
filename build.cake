@@ -70,7 +70,7 @@ Setup(ctx =>
    if (exitCode != 0)
       throw new Exception($"Failed to get .NET SDK info: {exitCode}");
 
-   if (string.IsNullOrEmpty(msBuildDirPath))
+   if (string.IsNullOrEmpty(msBuildDirPath) && !isGithubBuild)
    {
       var paths = VSWhereAll(new VSWhereAllSettings{ Requires="Microsoft.VisualStudio.Workload.VisualStudioExtension" });
       Information("Found {0} vs installation that have VisualStudioExtension workload", paths.Count);
