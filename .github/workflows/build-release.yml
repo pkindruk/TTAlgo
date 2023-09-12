@@ -52,6 +52,7 @@ jobs:
         uses: cake-build/cake-action@v1
         with:
           script-path: ${{ env.BuildScriptPath }}
+          cake-version: tool-manifest
           arguments: |
             Version: ${{ inputs.releaseVersion }}
             BuildNumber: ${{ github.run_number }}
