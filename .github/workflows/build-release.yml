@@ -40,13 +40,23 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Run PowerShell script
-        run: >
-          ${{ env.BuildScriptPath }}
-          --Version=${{ inputs.releaseVersion }}
-          --BuildNumber=${{ github.run_number }}
-          --SkipTests=False
-          --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+      # - name: Run PowerShell script
+      #   run: >
+      #     ${{ env.BuildScriptPath }}
+      #     --Version=${{ inputs.releaseVersion }}
+      #     --BuildNumber=${{ github.run_number }}
+      #     --SkipTests=False
+      #     --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+
+      - name: Run the Cake script
+        uses: cake-build/cake-action@v1
+        with:
+          script-path: ${{ env.BuildScriptPath }}
+          arguments: |
+            Version: ${{ inputs.releaseVersion }}
+            BuildNumber: ${{ github.run_number }}
+            ArtifactsDirName: ${{ env.BUILD_OUTPUT_FOLDER }}
+            SkipTests: False
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
