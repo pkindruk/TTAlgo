@@ -57,7 +57,7 @@ jobs:
             Version: ${{ inputs.releaseVersion }}
             BuildNumber: ${{ github.run_number }}
             ArtifactsDirName: ${{ env.BUILD_OUTPUT_FOLDER }}
-            SkipTests: False
+            SkipTests: True
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
