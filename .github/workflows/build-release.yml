@@ -51,7 +51,7 @@ jobs:
       - name: Run the Cake script
         uses: cake-build/cake-action@v1
         with:
-          script-path: ${{ env.BuildScriptPath }}
+          script-path: build.cake
           cake-version: tool-manifest
           arguments: |
             Version: ${{ inputs.releaseVersion }}
