@@ -8,5 +8,7 @@
         <BuildVersion Condition="'$(BuildVersion)' == ''">1.12</BuildVersion>
         <BuildNumber Condition="'$(BuildNumber)' == ''">34</BuildNumber>
         <FileVersion>$(BuildVersion).$(BuildNumber).0</FileVersion>
+
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 </Project>
