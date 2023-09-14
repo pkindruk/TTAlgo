@@ -13,7 +13,7 @@ namespace TickTrader.Algo.AutoUpdate
 
     public class AutoUpdateService
     {
-        public const string MainGithubRepo = "https://github.com/SoftFx/TTAlgo";
+        public const string MainGithubRepo = "https://github.com/pkindruk/TTAlgo";
         public const string MainSourceName = "main";
 
         internal static readonly TimeSpan CheckUpdatesTimeout = TimeSpan.FromMinutes(15);
