@@ -15,7 +15,7 @@ on:
         required: true
         default: true
 env:
-  BUILD_OUTPUT_FOLDER: build.output
+  BUILD_OUTPUT_FOLDER: nuget.output
   ARTIFACTS_NAME: TTAlgo '${{ inputs.TargetProject }}' nuget
 
 jobs:
@@ -37,8 +37,10 @@ jobs:
         run: >
           ${{ env.BootstrapperPath }}
           ${{ env.BuildScriptPath }}
+          --Target=Pack
           --TargetProject=${{ inputs.TargetProject }}
           --VersionSuffix=${{ env.VersionSuffix }}
+          --BuildNumber=${{ github.run_number }}
           --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
           --NugetApiKey=${{ secrets.ALGO_NUGET_KEY }}
 
