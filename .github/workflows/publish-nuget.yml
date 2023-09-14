@@ -1,0 +1,49 @@
+name: TTAlgo Nuget publish
+run-name: Publish nuget '${{ inputs.TargetProject }}'
+on:
+  workflow_dispatch:
+    inputs:
+      TargetProject:
+        description: 'Target project'
+        type: choice
+        required: true
+        options: ['api', 'tools', 'templates']
+        default: 'api'
+      IsPreRelease:
+        description: 'Pre-Release'
+        type: boolean
+        required: true
+        default: true
+env:
+  BUILD_OUTPUT_FOLDER: build.output
+  ARTIFACTS_NAME: TTAlgo '${{ inputs.TargetProject }}' nuget
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      BootstrapperPath: ./build.ps1
+      BuildScriptPath: ./nuget.cake
+      VersionSuffix: ''
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Generate pre-release suffix'
+        if: inputs.IsPreRelease
+        run: echo "VersionSuffix=beta" >> $env:GITHUB_ENV
+
+      - name: Run Cake bootstrapper
+        shell: pwsh
+        run: >
+          ${{ env.BootstrapperPath }}
+          ${{ env.BuildScriptPath }}
+          --TargetProject=${{ inputs.TargetProject }}
+          --VersionSuffix=${{ env.VersionSuffix }}
+          --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+          --NugetApiKey=${{ secrets.ALGO_NUGET_KEY }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACTS_NAME }}
+          path: ${{ env.BUILD_OUTPUT_FOLDER }}
