@@ -14,6 +14,11 @@ on:
         type: boolean
         required: true
         default: true
+      DoPublish:
+        description: 'Publish package'
+        type: boolean
+        required: true
+        default: true
 env:
   BUILD_OUTPUT_FOLDER: nuget.output
   ARTIFACTS_NAME: TTAlgo '${{ inputs.TargetProject }}' nuget ${{ github.run_number }}
@@ -50,6 +55,7 @@ jobs:
           path: ${{ env.BUILD_OUTPUT_FOLDER }}
 
       - name: Push Nuget (Cake bootstrapper)
+        if: inputs.DoPublish
         shell: pwsh
         run: >
           ${{ env.BootstrapperPath }}
