@@ -29,13 +29,13 @@ jobs:
     env:
       BootstrapperPath: ./build.ps1
       BuildScriptPath: ./nuget.cake
-      VersionSuffix: none
+      NugetVersionSuffix: none
     steps:
       - uses: actions/checkout@v3
 
       - name: 'Generate pre-release suffix'
         if: inputs.IsPreRelease
-        run: echo "VersionSuffix=beta" >> $GITHUB_ENV
+        run: echo "NugetVersionSuffix=beta" >> $GITHUB_ENV
 
       - name: Pack Nuget (Cake bootstrapper)
         shell: pwsh
@@ -44,7 +44,7 @@ jobs:
           ${{ env.BuildScriptPath }}
           --Target=Pack
           --TargetProject=${{ inputs.TargetProject }}
-          --VersionSuffix=${{ env.VersionSuffix }}
+          --VersionSuffix=${{ env.NugetVersionSuffix }}
           --BuildNumber=${{ github.run_number }}
           --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
 
