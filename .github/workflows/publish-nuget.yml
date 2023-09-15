@@ -16,7 +16,7 @@ on:
         default: true
 env:
   BUILD_OUTPUT_FOLDER: nuget.output
-  ARTIFACTS_NAME: TTAlgo '${{ inputs.TargetProject }}' nuget
+  ARTIFACTS_NAME: TTAlgo '${{ inputs.TargetProject }}' nuget ${{ github.run_number }}
 
 jobs:
   publish:
@@ -24,7 +24,7 @@ jobs:
     env:
       BootstrapperPath: ./build.ps1
       BuildScriptPath: ./nuget.cake
-      VersionSuffix: ''
+      VersionSuffix: none
     steps:
       - uses: actions/checkout@v3
 
@@ -32,7 +32,7 @@ jobs:
         if: inputs.IsPreRelease
         run: echo "VersionSuffix=beta" >> $GITHUB_ENV
 
-      - name: Run Cake bootstrapper
+      - name: Pack Nuget (Cake bootstrapper)
         shell: pwsh
         run: >
           ${{ env.BootstrapperPath }}
@@ -42,10 +42,18 @@ jobs:
           --VersionSuffix=${{ env.VersionSuffix }}
           --BuildNumber=${{ github.run_number }}
           --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
-          --NugetApiKey=${{ secrets.ALGO_NUGET_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACTS_NAME }}
           path: ${{ env.BUILD_OUTPUT_FOLDER }}
+
+      - name: Push Nuget (Cake bootstrapper)
+        shell: pwsh
+        run: >
+          ${{ env.BootstrapperPath }}
+          ${{ env.BuildScriptPath }}
+          --Target=PushStandalone
+          --ArtifactsDirName=${{ env.BUILD_OUTPUT_FOLDER }}
+          --NugetApiKey=${{ secrets.ALGO_NUGET_KEY }}
