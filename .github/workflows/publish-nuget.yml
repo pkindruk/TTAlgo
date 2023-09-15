@@ -25,7 +25,7 @@ env:
 
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       BootstrapperPath: ./build.ps1
       BuildScriptPath: ./nuget.cake
@@ -35,9 +35,10 @@ jobs:
 
       - name: 'Generate pre-release suffix'
         if: inputs.IsPreRelease
-        run: echo "NugetVersionSuffix=beta" >> $env:GITHUB_ENV
+        run: echo "NugetVersionSuffix=beta" >> $GITHUB_ENV
 
       - name: Pack Nuget (Cake bootstrapper)
+        shell: pwsh
         run: >
           ${{ env.BootstrapperPath }}
           ${{ env.BuildScriptPath }}
@@ -55,6 +56,7 @@ jobs:
 
       - name: Push Nuget (Cake bootstrapper)
         if: inputs.DoPublish
+        shell: pwsh
         run: >
           ${{ env.BootstrapperPath }}
           ${{ env.BuildScriptPath }}
