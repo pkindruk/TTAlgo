@@ -68,6 +68,6 @@ jobs:
       - name: Push tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: nuget/${{ inputs.TargetProject }}/${{ steps.pack.outputs.version }}
-          message: "Nuget ${{ inputs.TargetProject }} ${{ steps.pack.outputs.version }}"
+          tag: nuget/${{ inputs.TargetProject }}/v${{ steps.pack.outputs.version }}
+          message: "Publish Nuget ${{ inputs.TargetProject }} v${{ steps.pack.outputs.version }}"
           force_push_tag: true
