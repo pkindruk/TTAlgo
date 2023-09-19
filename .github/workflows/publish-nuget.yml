@@ -68,7 +68,6 @@ jobs:
 
       - name: Push tag
         uses: rickstaa/action-create-tag@v1
-        if: inputs.DoPublish
         with:
           tag: nuget/${{ inputs.TargetProject }}/v${{ steps.pack.outputs.version }}
           message: "Publish Nuget ${{ inputs.TargetProject }} v${{ steps.pack.outputs.version }}"
